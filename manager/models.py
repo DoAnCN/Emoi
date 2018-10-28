@@ -41,7 +41,7 @@ class Instance(models.Model):
     usr_deployed = models.CharField('User Deployed',
                                     max_length=200, blank=True)
     status = models.BooleanField('Status', default=False)
-    latest_deploy =  models.DateTimeField('Latest Deploy', auto_now_add=True)
+    latest_deploy =  models.DateTimeField('Latest Deploy', blank=True)
     project = models.ForeignKey('Project', default=None,
                                 on_delete=models.CASCADE)
     host = models.ForeignKey('Host', on_delete=models.CASCADE)

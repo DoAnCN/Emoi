@@ -1,43 +1,33 @@
 from rest_framework import serializers
 
 from manager.models import Instance, Host, Project, Version
-# from rest_framework.serializers import HyperlinkedModelSerializer
 
-class ProjectSerializer(serializers.ModelSerializer):
+class ProjectSerializerGet(serializers.ModelSerializer):
     class Meta:
         model = Project
-        fields = [
-            'name',
-            'url',
-            ]
+        fields = ['name', 'url',]
+        read_only_fields = ['name', 'url', ]
 
-class VersionSerializer(serializers.ModelSerializer):
+class VersionSerializerGet(serializers.ModelSerializer):
     class Meta:
         model = Version
-        fields = [
-            'name',
-            ]
+        fields = ['name',]
+        read_only_fields = ['name',]
 
-class InstanceSerializer(serializers.ModelSerializer):
-    project = ProjectSerializer(required=True)
-    project_ver = VersionSerializer(required=True)
-    class Meta:
-        model = Instance
-        fields = [
-            'name',
-            'db_name',
-            'host',
-            'project',
-            'project_ver',
-        ]
-
-class HostSerializer(serializers.ModelSerializer):
+class HostSerializerGet(serializers.ModelSerializer):
     class Meta:
         model = Host
-        fields=[
-            'name',
-            'ip',
-            'port',
-            'os',
-            'num_of_inst',
-        ]
+        fields=['name', 'ip', 'port',]
+        read_only_fields = ['name', 'ip', 'port',]
+
+class InstanceSerializer(serializers.ModelSerializer):
+    project = ProjectSerializerGet(required=False)
+    project_ver = VersionSerializerGet(required=False)
+    host = HostSerializerGet(required=False)
+
+    class Meta:
+        model = Instance
+        fields = ['name', 'db_name', 'host', 'project', 'project_ver',
+                  'usr_deployed', 'latest_deploy',]
+        read_only_fields = ['name', 'db_name', 'host',
+                            'project', 'project_ver',]

@@ -1,10 +1,6 @@
-import warnings
-
-from django.core.exceptions import ImproperlyConfigured
-from django.db.models import Q
 from rest_framework import generics
 
-from .serializers import InstanceSerializer, HostSerializer
+from .serializers import InstanceSerializer, HostSerializerGet
 from manager.models import Instance, Host
 
 # class MultipleFieldLookupMixin(object):
@@ -22,7 +18,7 @@ from manager.models import Instance, Host
 #         return obj
 
 
-class InstanceAPIView(generics.RetrieveAPIView):
+class InstanceAPIView(generics.RetrieveUpdateAPIView):
     lookup_field = 'name'
     serializer_class = InstanceSerializer
 
@@ -39,7 +35,7 @@ class InstanceAPIView(generics.RetrieveAPIView):
 class HostAPIView(generics.RetrieveAPIView): #, MultipleFieldLookupMixin):
     queryset = Host.objects.all()
     lookup_field = 'name'
-    serializer_class = HostSerializer
+    serializer_class = HostSerializerGet
 
     def get_queryset(self):
         return Host.objects.all()
