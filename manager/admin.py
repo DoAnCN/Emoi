@@ -1,6 +1,11 @@
 # -*- codding: utf-8 -*-
 from __future__ import unicode_literals
-from django.contrib import admin
+
+import ast
+import logging
+import subprocess
+
+from django.contrib import admin, messages
 from django.utils.translation import ugettext_lazy as _
 
 from .models import Instance, Host, Project, Version
@@ -9,8 +14,7 @@ from .forms import InstanceForm
 from inline_actions.admin import InlineActionsModelAdminMixin,\
 	InlineActionsMixin
 
-class InstanceInline(InlineActionsMixin,
-                    admin.TabularInline):
+class InstanceInline(InlineActionsMixin, admin.TabularInline):
 	model = Instance
 	inline_actions = ['deploy']
 	list_display = ('name', 'db_name' , 'usr_deployed', 'status',)
@@ -35,23 +39,44 @@ class InstanceModelAdmin(admin.ModelAdmin):
 	form = InstanceForm
 	list_per_page = 10
 	list_display = ('name', 'db_name', 'domain', 'project', 'host'
-    	, 'usr_deployed', 'status', 'latest_deploy',)
+					, 'usr_deployed', 'status', 'latest_deploy',)
 	list_filter = ('status', 'project__name', 'host__name', 'usr_deployed',)
 	readonly_fields = ('usr_deployed', 'status', 'latest_deploy', )
 	actions = ['deploy',]
 	fieldsets = [
-		(None, 					{'fields': ['name', 'db_name', 'domain',
-											  'host']}),
+		(None, 					{'fields': ['name', 'db_name', 'domain', 'host']}),
 		('Project Information', {'fields': ['project', 'project_ver']}),
-		('Status',				{'fields': ['usr_deployed', 'status',
-											  'latest_deploy']}),
+		('Status',				{'fields': ['usr_deployed', 'status', 'latest_deploy']}),
 	]
 
 	def deploy(self, request, queryset):
-		print('========{}======='.format(request.user))
+		logger = logging.getLogger(__name__)
+		selected_list = request.POST.getlist(admin.ACTION_CHECKBOX_NAME)
+		for selected in selected_list:
+			instance = Instance.objects.get(id=selected)
+			try:
+				output = subprocess.run(['/home/datlh/.local/share/virtualenvs/webkhoaluan/bin/webautotool',
+								'remote',
+								'deploy',
+								instance.name], stderr=subprocess.PIPE)
+				output = output.stderr.decode("utf-8")
+				if "Error" in output:
+					output = output[output.find("STDERR")+7:]
+					logger.error(output.strip())
+					if "No route to host" in output:
+						messages.error(
+							request, "No route to host -"
+									 " Please check ip address of host "
+									 "or Host does not exist ")
 
+			except Exception as e:
+				if str(e).startswith('[Errno '):
+					messages.error(
+						request,"Deployment process uncompleted -"
+								" Please contact your system administrator")
+				logger.error(e)
 
-	deploy.short_description = "Deploy instances"
+	deploy.short_description = "Deploy selected instances"
 
 class HostModelAdmin(admin.ModelAdmin):
 	list_per_page = 10
