@@ -23,7 +23,7 @@ class InstanceInline(InlineActionsMixin, admin.TabularInline):
 		return False
 
 	def deploy(self, request, obj, parent_obj=None):
-		print("============================")
+		print('============================')
 		# url = reverse(
         #     'admin:{}_{}_change'.format(
         #         obj._meta.app_label,
@@ -32,7 +32,7 @@ class InstanceInline(InlineActionsMixin, admin.TabularInline):
         #     args=(obj.pk,)
         # )
 		# return redirect(url)
-	deploy.short_description = _("Deploy")
+	deploy.short_description = _('Deploy')
 
 # Register your models here.
 class InstanceModelAdmin(admin.ModelAdmin):
@@ -42,14 +42,14 @@ class InstanceModelAdmin(admin.ModelAdmin):
 					, 'usr_deployed', 'status', 'latest_deploy',)
 	list_filter = ('status', 'project__name', 'host__name', 'usr_deployed',)
 	readonly_fields = ('usr_deployed', 'status', 'latest_deploy', )
-	actions = ['deploy',]
+	actions = ['deployInstance',]
 	fieldsets = [
 		(None, 					{'fields': ['name', 'db_name', 'domain', 'host']}),
 		('Project Information', {'fields': ['project', 'project_ver']}),
 		('Status',				{'fields': ['usr_deployed', 'status', 'latest_deploy']}),
 	]
 
-	def deploy(self, request, queryset):
+	def deployInstance(self, request, queryset):
 		logger = logging.getLogger(__name__)
 		selected_list = request.POST.getlist(admin.ACTION_CHECKBOX_NAME)
 		for selected in selected_list:
@@ -59,30 +59,42 @@ class InstanceModelAdmin(admin.ModelAdmin):
 								'remote',
 								'deploy',
 								instance.name], stderr=subprocess.PIPE)
-				output = output.stderr.decode("utf-8")
-				if "Error" in output:
-					output = output[output.find("STDERR")+7:]
+				output = output.stderr.decode('utf-8')
+				if 'Error' in output:
+					output = output[output.find('STDERR')+7:]
 					logger.error(output.strip())
-					if "No route to host" in output:
+					if 'No route to host' in output:
 						messages.error(
-							request, "No route to host -"
-									 " Please check ip address of host "
-									 "or Host does not exist ")
+							request, 'No route to host -'
+									 ' Please check ip address of host '
+									 'or Host does not exist ')
+					elif 'Permission denied' in output:
+						messages.error(
+							request, 'Permission denied - '
+									 'Please check permission with system admin'
+						)
 
 			except Exception as e:
 				if str(e).startswith('[Errno '):
 					messages.error(
-						request,"Deployment process uncompleted -"
-								" Please contact your system administrator")
+						request,'Deployment process uncompleted -'
+								' Please contact your system administrator')
 				logger.error(e)
 
-	deploy.short_description = "Deploy selected instances"
+	deployInstance.short_description = 'Deploy selected instances'
+
 
 class HostModelAdmin(admin.ModelAdmin):
 	list_per_page = 10
 	list_display = ('name', 'ip', 'port', 'os', )
 	list_filter = ('os', )
 	readonly_fields = ('num_of_inst', )
+	actions = ['buildHost']
+
+	def buildHost(self, request, queryset):
+		pass
+
+	buildHost.short_description = 'Build selected hosts'
 
 class ProjectModelAdmin(InlineActionsModelAdminMixin, admin.ModelAdmin):
 	list_per_page = 10
