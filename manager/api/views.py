@@ -32,7 +32,7 @@ class InstanceAPIView(generics.RetrieveUpdateAPIView):
     #         qs = qs.filter(Q(name__icontains=query))
     #     return  qs
 
-class HostAPIView(generics.RetrieveAPIView): #, MultipleFieldLookupMixin):
+class HostAPIView(generics.RetrieveUpdateAPIView): #, MultipleFieldLookupMixin):
     queryset = Host.objects.all()
     lookup_field = 'name'
     serializer_class = HostSerializerGet
