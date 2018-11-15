@@ -17,6 +17,7 @@ class Host(models.Model):
     port = models.CharField('Port SSH', max_length=10)
     os = models.CharField('Operating System', max_length=200)
     num_of_inst = models.IntegerField('Number of Instance', default=0)
+    is_agent = models.BooleanField("Is Agent", default=False)
 
     def __str__(self):
         return self.name

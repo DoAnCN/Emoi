@@ -18,6 +18,7 @@ class InstanceInline(InlineActionsMixin, admin.TabularInline):
 	model = Instance
 	inline_actions = ['deploy']
 	list_display = ('name', 'db_name' , 'usr_deployed', 'status',)
+	readonly_fields = ('usr_deployed', 'status', 'latest_deploy',)
 
 	def has_add_permission(self, request, obj):
 		return False
@@ -42,12 +43,12 @@ class InstanceModelAdmin(admin.ModelAdmin):
 					, 'usr_deployed', 'status', 'latest_deploy',)
 	list_filter = ('status', 'project__name', 'host__name', 'usr_deployed',)
 	readonly_fields = ('usr_deployed', 'status', 'latest_deploy', )
-	actions = ['deployInstance',]
-	fieldsets = [
+	actions = ('deployInstance',)
+	fieldsets = (
 		(None, 					{'fields': ['name', 'db_name', 'domain', 'host']}),
 		('Project Information', {'fields': ['project', 'project_ver']}),
 		('Status',				{'fields': ['usr_deployed', 'status', 'latest_deploy']}),
-	]
+	)
 
 	def deployInstance(self, request, queryset):
 		logger = logging.getLogger(__name__)
@@ -86,15 +87,19 @@ class InstanceModelAdmin(admin.ModelAdmin):
 
 class HostModelAdmin(admin.ModelAdmin):
 	list_per_page = 10
-	list_display = ('name', 'ip', 'port', 'os', )
-	list_filter = ('os', )
-	readonly_fields = ('num_of_inst', )
-	actions = ['buildHost']
+	list_display = ('name', 'ip', 'port', 'os', 'is_agent',)
+	list_filter = ('os', 'is_agent',)
+	readonly_fields = ('num_of_inst', 'is_agent', 'os')
+	actions = ('buildHost','registerAgent')
 
 	def buildHost(self, request, queryset):
 		pass
 
+	def registerAgent(self, request, queryset):
+		pass
+
 	buildHost.short_description = 'Build selected hosts'
+	registerAgent.short_description = 'Register selected hosts as agent'
 
 class ProjectModelAdmin(InlineActionsModelAdminMixin, admin.ModelAdmin):
 	list_per_page = 10
