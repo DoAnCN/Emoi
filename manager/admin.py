@@ -1,7 +1,6 @@
 # -*- codding: utf-8 -*-
 from __future__ import unicode_literals
 
-import ast
 import logging
 import subprocess
 
@@ -13,6 +12,7 @@ from .forms import InstanceForm
 
 from inline_actions.admin import InlineActionsModelAdminMixin,\
 	InlineActionsMixin
+
 
 class InstanceInline(InlineActionsMixin, admin.TabularInline):
 	model = Instance
@@ -41,13 +41,14 @@ class InstanceModelAdmin(admin.ModelAdmin):
 	list_per_page = 10
 	list_display = ('name', 'db_name', 'domain', 'project', 'host'
 					, 'usr_deployed', 'status', 'latest_deploy',)
-	list_filter = ('status', 'project__name', 'host__name', 'usr_deployed',)
+	list_filter = ('status', 'project__name', 'host__name', 'usr_deployed',
+				   'type')
 	readonly_fields = ('usr_deployed', 'status', 'latest_deploy', )
 	actions = ('deployInstance',)
 	fieldsets = (
-		(None, 					{'fields': ['name', 'db_name', 'domain', 'host']}),
+		(None, {'fields': ['name', 'db_name', 'domain', 'host', 'type']}),
 		('Project Information', {'fields': ['project', 'project_ver']}),
-		('Status',				{'fields': ['usr_deployed', 'status', 'latest_deploy']}),
+		('Status', {'fields': ['usr_deployed', 'status', 'latest_deploy']}),
 	)
 
 	def deployInstance(self, request, queryset):
@@ -56,10 +57,10 @@ class InstanceModelAdmin(admin.ModelAdmin):
 		for selected in selected_list:
 			instance = Instance.objects.get(id=selected)
 			try:
+				# user = request.user.get_username()
 				output = subprocess.run(['/home/datlh/.local/share/virtualenvs/webkhoaluan/bin/webautotool',
-								'remote',
-								'deploy',
-								instance.name], stderr=subprocess.PIPE)
+								'remote', 'deploy', instance.name,],
+										stderr=subprocess.PIPE)
 				output = output.stderr.decode('utf-8')
 				if 'Error' in output:
 					output = output[output.find('STDERR')+7:]

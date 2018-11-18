@@ -28,6 +28,6 @@ class InstanceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Instance
         fields = ['name', 'db_name', 'host', 'project', 'project_ver',
-                  'usr_deployed', 'latest_deploy',]
-        read_only_fields = ['name', 'db_name', 'host',
-                            'project', 'project_ver',]
+                  'usr_deployed', 'latest_deploy', 'type']
+        read_only_fields = ['name', 'db_name', 'host', 'project',
+                            'project_ver', 'type']

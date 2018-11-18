@@ -10,10 +10,15 @@ from django.http import Http404
 #     ('i', 'Inactive'),
 # )
 
+INSTANCE_TYPES = (
+    ('i', 'Integration'),
+    ('s', 'Staging'),
+    ('p', 'Production'),
+)
 # Create your models here.
 class Host(models.Model):
     name = models.CharField('Host Name', max_length=200, unique=True)
-    ip = models.GenericIPAddressField('Ip Address', unique=True)
+    ip = models.GenericIPAddressField('IP Address', unique=True)
     port = models.CharField('Port SSH', max_length=10)
     os = models.CharField('Operating System', max_length=200)
     num_of_inst = models.IntegerField('Number of Instance', default=0)
@@ -42,12 +47,13 @@ class Instance(models.Model):
     usr_deployed = models.CharField('User Deployed',
                                     max_length=200, blank=True)
     status = models.BooleanField('Status', default=False)
-    latest_deploy =  models.DateTimeField('Latest Deploy', blank=True)
+    latest_deploy =  models.DateTimeField('Latest Deploy', null=True,)
     project = models.ForeignKey('Project', default=None,
                                 on_delete=models.CASCADE)
     host = models.ForeignKey('Host', on_delete=models.CASCADE)
     project_ver = models.ForeignKey('Version',
                                 on_delete=models.CASCADE)
+    type = models.CharField('Type', max_length=200, choices=INSTANCE_TYPES)
     def __str__(self):
         return self.name
 
