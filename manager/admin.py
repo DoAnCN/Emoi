@@ -5,35 +5,10 @@ import logging
 import subprocess
 
 from django.contrib import admin, messages
-from django.utils.translation import ugettext_lazy as _
 
 from .models import Instance, Host, Project, Version
 from .forms import InstanceForm
 
-from inline_actions.admin import InlineActionsModelAdminMixin,\
-	InlineActionsMixin
-
-
-class InstanceInline(InlineActionsMixin, admin.TabularInline):
-	model = Instance
-	inline_actions = ['deploy']
-	list_display = ('name', 'db_name' , 'usr_deployed', 'status',)
-	readonly_fields = ('usr_deployed', 'status', 'latest_deploy',)
-
-	def has_add_permission(self, request, obj):
-		return False
-
-	def deploy(self, request, obj, parent_obj=None):
-		print('============================')
-		# url = reverse(
-        #     'admin:{}_{}_change'.format(
-        #         obj._meta.app_label,
-        #         obj._meta.model_name,
-        #     ),
-        #     args=(obj.pk,)
-        # )
-		# return redirect(url)
-	deploy.short_description = _('Deploy')
 
 # Register your models here.
 class InstanceModelAdmin(admin.ModelAdmin):
@@ -102,10 +77,9 @@ class HostModelAdmin(admin.ModelAdmin):
 	buildHost.short_description = 'Build selected hosts'
 	registerAgent.short_description = 'Register selected hosts as agent'
 
-class ProjectModelAdmin(InlineActionsModelAdminMixin, admin.ModelAdmin):
+class ProjectModelAdmin(admin.ModelAdmin):
 	list_per_page = 10
 	list_display = ('name', 'url')
-	inlines = [InstanceInline]
 
 class VersionModelAdmin(admin.ModelAdmin):
 	list_per_page = 10
