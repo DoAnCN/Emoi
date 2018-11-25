@@ -9,7 +9,11 @@ from django.http import Http404
 #     ('p', 'Pending'),
 #     ('i', 'Inactive'),
 # )
-
+STATUS_CHOICES = (
+    ('a', 'Active'),
+    ('p', 'Pending'),
+    ('n', 'Never Connected'),
+)
 INSTANCE_TYPES = (
     ('i', 'Integration'),
     ('s', 'Staging'),
@@ -20,9 +24,12 @@ class Host(models.Model):
     name = models.CharField('Host Name', max_length=200, unique=True)
     ip = models.GenericIPAddressField('IP Address', unique=True)
     port = models.CharField('Port SSH', max_length=10)
-    os = models.CharField('Operating System', max_length=200)
+    os = models.CharField('Operating System', max_length=200, null=True)
     num_of_inst = models.IntegerField('Number of Instance', default=0)
-    is_agent = models.BooleanField("Is Agent", default=False)
+    monitor = models.CharField('Status', max_length=20, choices=STATUS_CHOICES,
+                               default='n')
+    date_add = models.DateTimeField('Date add', null=True)
+    last_alive = models.DateTimeField('Last Keep Alive', null=True)
 
     def __str__(self):
         return self.name
@@ -35,7 +42,7 @@ class Project(models.Model):
 
 class Version(models.Model):
     name = models.CharField('Project Version', max_length=10)
-    project = models.ForeignKey('Project', on_delete=models.CASCADE)
+    project = models.ForeignKey('Project', on_delete=models.PROTECT)
 
     def __str__(self):
         return self.name
@@ -49,10 +56,10 @@ class Instance(models.Model):
     status = models.BooleanField('Status', default=False)
     latest_deploy =  models.DateTimeField('Latest Deploy', null=True,)
     project = models.ForeignKey('Project', default=None,
-                                on_delete=models.CASCADE)
-    host = models.ForeignKey('Host', on_delete=models.CASCADE)
+                                on_delete=models.PROTECT)
+    host = models.ForeignKey('Host', on_delete=models.PROTECT)
     project_ver = models.ForeignKey('Version',
-                                on_delete=models.CASCADE)
+                                on_delete=models.PROTECT)
     type = models.CharField('Type', max_length=200, choices=INSTANCE_TYPES)
     def __str__(self):
         return self.name

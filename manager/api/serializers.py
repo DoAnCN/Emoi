@@ -17,8 +17,9 @@ class VersionSerializerGet(serializers.ModelSerializer):
 class HostSerializerGet(serializers.ModelSerializer):
     class Meta:
         model = Host
-        fields=['name', 'ip', ]
-        read_only_fields = ['name', ]
+        fields = ['name', 'ip', 'port', 'os', 'monitor', 'date_add',
+                  'last_alive']
+        read_only_fields = ['name', 'port', 'ip']
 
 class InstanceSerializer(serializers.ModelSerializer):
     project = ProjectSerializerGet(required=False)

@@ -17,25 +17,26 @@ class InstanceModelAdmin(admin.ModelAdmin):
 	list_display = ('name', 'db_name', 'domain', 'project', 'host'
 					, 'usr_deployed', 'status', 'latest_deploy',)
 	list_filter = ('status', 'project__name', 'host__name', 'usr_deployed',
-				   'type')
+				   'type',)
 	readonly_fields = ('usr_deployed', 'status', 'latest_deploy', )
 	actions = ('deployInstance',)
 	fieldsets = (
-		(None, {'fields': ['name', 'db_name', 'domain', 'host', 'type']}),
-		('Project Information', {'fields': ['project', 'project_ver']}),
-		('Status', {'fields': ['usr_deployed', 'status', 'latest_deploy']}),
+		(None, {'fields': [('name', 'host'), ('db_name', 'type'), 'domain',]}),
+		('Project Information', {'fields': [('project', 'project_ver'),]}),
+		('Status', {'fields': ['usr_deployed', 'status', 'latest_deploy',]}),
 	)
 
 	def deployInstance(self, request, queryset):
 		logger = logging.getLogger(__name__)
 		selected_list = request.POST.getlist(admin.ACTION_CHECKBOX_NAME)
 		for selected in selected_list:
-			instance = Instance.objects.get(id=selected)
+			instance_info = Instance.objects.get(id=selected)
 			try:
 				# user = request.user.get_username()
-				output = subprocess.run(['/home/datlh/.local/share/virtualenvs/webkhoaluan/bin/webautotool',
-								'remote', 'deploy', instance.name,],
-										stderr=subprocess.PIPE)
+				output = subprocess.run([
+					'/home/datlh/.local/share/virtualenvs/webkhoaluan/bin/webautotool',
+					'remote', 'deploy', instance_info.name,],
+					stderr=subprocess.PIPE)
 				output = output.stderr.decode('utf-8')
 				if 'Error' in output:
 					output = output[output.find('STDERR')+7:]
@@ -63,23 +64,55 @@ class InstanceModelAdmin(admin.ModelAdmin):
 
 class HostModelAdmin(admin.ModelAdmin):
 	list_per_page = 10
-	list_display = ('name', 'ip', 'port', 'os', 'is_agent',)
-	list_filter = ('os', 'is_agent',)
-	readonly_fields = ('num_of_inst', 'is_agent', 'os')
-	actions = ('buildHost','registerAgent')
-
-	def buildHost(self, request, queryset):
-		pass
+	list_display = ('name', 'ip', 'num_of_inst', 'date_add','last_alive',
+					'monitor',)
+	list_filter = ('os', 'date_add',)
+	readonly_fields = ('os', 'date_add', 'last_alive', 'num_of_inst',
+					   'monitor',)
+	fieldsets = (
+		(None, {'fields': ['name', 'port', 'ip', 'os', 'num_of_inst',]}),
+		('Monitoring Information', {'fields': ['date_add', 'last_alive',
+											   'monitor',]}),
+	)
+	actions = ('registerAgent',)
 
 	def registerAgent(self, request, queryset):
-		pass
+		logger = logging.getLogger(__name__)
+		selected_list = request.POST.getlist(admin.ACTION_CHECKBOX_NAME)
+		for selected in selected_list:
+			host_info = Host.objects.get(id=selected)
+			try:
+				output = subprocess.run([
+					'/home/datlh/.local/share/virtualenvs/webkhoaluan/bin/webautotool',
+					'remote', 'register', host_info.name, ],
+					stderr=subprocess.PIPE)
+				output = output.stderr.decode('utf-8')
+				if 'Error' in output:
+					output = output[output.find('STDERR') + 7:]
+					logger.error(output.strip())
+					if 'No route to host' in output:
+						messages.error(
+							request, 'No route to host -'
+									 ' Please check ip address of host '
+									 'or Host does not exist ')
+					elif 'Permission denied' in output:
+						messages.error(
+							request, 'Permission denied - '
+									 'Please check permission with system admin'
+						)
 
-	buildHost.short_description = 'Build selected hosts'
+			except Exception as e:
+				if str(e).startswith('[Errno '):
+					messages.error(
+						request, 'Registration process uncompleted -'
+								 ' Please contact your system administrator')
+				logger.error(e)
+
 	registerAgent.short_description = 'Register selected hosts as agent'
 
 class ProjectModelAdmin(admin.ModelAdmin):
 	list_per_page = 10
-	list_display = ('name', 'url')
+	list_display = ('name', 'url',)
 
 class VersionModelAdmin(admin.ModelAdmin):
 	list_per_page = 10
