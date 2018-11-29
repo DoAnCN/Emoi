@@ -16,13 +16,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
-# from manager import api
-
-from rest_framework_jwt.views import obtain_jwt_token, refresh_jwt_token
 
 urlpatterns = [
     path('', admin.site.urls),
-    path('api/auth/token/', obtain_jwt_token),
-    path('api/token-refresh/', refresh_jwt_token),
     path('api/', include('manager.api.urls', namespace='api_manager')),
 ]

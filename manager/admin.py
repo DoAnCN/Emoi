@@ -51,6 +51,9 @@ class InstanceModelAdmin(admin.ModelAdmin):
 							request, 'Permission denied - '
 									 'Please check permission with system admin'
 						)
+				elif 'has been completed' in output:
+					messages.info(request,
+								  'The deployment process has been completed')
 
 			except Exception as e:
 				if str(e).startswith('[Errno '):
@@ -100,6 +103,9 @@ class HostModelAdmin(admin.ModelAdmin):
 							request, 'Permission denied - '
 									 'Please check permission with system admin'
 						)
+				elif 'has been completed' in output:
+					messages.info(request,
+							'The register agent process has been completed')
 
 			except Exception as e:
 				if str(e).startswith('[Errno '):
