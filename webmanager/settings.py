@@ -23,9 +23,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'n19f0syn_6vcc=ngfl)*+o%@o31gsr$v@fs4l#47m7+4c67i%c'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = ['localhost']
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -38,7 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'manager.apps.ManagerConfig',
-    'inline_actions',
+#    'inline_actions',
     'rest_framework',
 ]
 
@@ -78,8 +78,12 @@ WSGI_APPLICATION = 'webmanager.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'DB_webmanager',
+        'USER': 'ubuntu',
+        'PASSWORD': 'XKGP$#89wHob',
+        'HOST': 'localhost',
+        'PORT': '3306',
     }
 }
 
