@@ -25,7 +25,7 @@ SECRET_KEY = 'n19f0syn_6vcc=ngfl)*+o%@o31gsr$v@fs4l#47m7+4c67i%c'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['localhost']
 
 
 # Application definition
@@ -80,7 +80,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'DB_webmanager',
-        'USER': 'ubuntu',
+        'USER': 'manager',
         'PASSWORD': 'XKGP$#89wHob',
         'HOST': 'localhost',
         'PORT': '3306',
