@@ -3,8 +3,10 @@ from __future__ import unicode_literals
 
 import logging
 import subprocess
+import sweetify
 
 from django.contrib import admin, messages
+from django.shortcuts import render
 
 from .models import Instance, Host, Project, Version
 from .forms import InstanceForm

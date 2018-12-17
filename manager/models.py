@@ -60,7 +60,8 @@ class Instance(models.Model):
     host = models.ForeignKey('Host', on_delete=models.PROTECT)
     project_ver = models.ForeignKey('Version',
                                 on_delete=models.PROTECT)
-    type = models.CharField('Type', max_length=200, choices=INSTANCE_TYPES)
+    type = models.CharField('Type', max_length=200, choices=INSTANCE_TYPES,
+                            default='i',)
     def __str__(self):
         return self.name
 
