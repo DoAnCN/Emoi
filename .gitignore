@@ -8,4 +8,4 @@
 # python compile
 *.py[co]
 *.py.save
-/migrations/000*
+manager/migrations/000*
