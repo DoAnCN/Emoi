@@ -1,0 +1,37 @@
+{% extends 'admin/base_site.html' %}
+
+{% load static %}
+
+{% block nav-global %}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            $("#myHref").click(function() {
+              // alert("inside onclick");
+                swal(
+                  'Good job!',
+                  'You clicked the button!',
+                  'error'
+                )
+            });
+        });
+        var element;
+        element = document.getElementById('user-tools')
+        if (element){
+           element.innerHTML =' Welcome,\n' +
+               '<strong>admin</strong>.\n' +
+               '<a href="#" id="myHref">Monitor View</a> /\n' +
+               '<a href="/password_change/">Change password</a> /\n' +
+               '<a href="/logout/">Log outt</a>'
+        }
+    </script>
+{% endblock %}
+
+
+<!--{% if DJdata %}-->
+    <!--<script type="text/javascript">-->
+        <!--(function () {window.DJdata = {{DJdata|safe}};})();-->
+    <!--</script>-->
+<!--{% endif %}-->
+
