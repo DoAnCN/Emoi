@@ -7,12 +7,12 @@ import subprocess
 from django.contrib import admin, messages
 
 from .models import Instance, Host, Project, Version
-from .forms import InstanceForm
+#from .forms import InstanceForm
 
 
 # Register your models here.
 class InstanceModelAdmin(admin.ModelAdmin):
-	form = InstanceForm
+#	form = InstanceForm
 	list_per_page = 10
 	list_display = ('name', 'db_name', 'domain', 'project', 'host'
 					, 'usr_deployed', 'status', 'latest_deploy',)

@@ -4,11 +4,8 @@ from __future__ import unicode_literals
 from django.db import models
 from django.http import Http404
 
-# STATUS_CHOICES = (
-#     ('a', 'Active'),
-#     ('p', 'Pending'),
-#     ('i', 'Inactive'),
-# )
+from smart_selects.db_fields import ChainedForeignKey
+
 STATUS_CHOICES = (
     ('a', 'Active'),
     ('p', 'Pending'),
@@ -55,11 +52,14 @@ class Instance(models.Model):
                                     max_length=200, blank=True)
     status = models.BooleanField('Status', default=False)
     latest_deploy =  models.DateTimeField('Latest Deploy', null=True,)
-    project = models.ForeignKey('Project', default=None,
-                                on_delete=models.PROTECT)
+    project = models.ForeignKey('Project', on_delete=models.PROTECT)
     host = models.ForeignKey('Host', on_delete=models.PROTECT)
-    project_ver = models.ForeignKey('Version',
-                                on_delete=models.PROTECT)
+    project_ver = ChainedForeignKey('Version',
+                                chained_field='project',
+				chained_model_field='project',
+				show_all=False,
+				auto_choose=True,
+				sort=True,)
     type = models.CharField('Type', max_length=200, choices=INSTANCE_TYPES)
     def __str__(self):
         return self.name

@@ -1,4 +1,5 @@
 django
 djangorestframework
 djangorestframework_jwt
+django-smart-selects
 mysqlclient

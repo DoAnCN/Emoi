@@ -27,6 +27,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['localhost']
 
+USE_DJANGO_JQUERY = True
 
 # Application definition
 
@@ -38,7 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'manager.apps.ManagerConfig',
-#    'inline_actions',
+    'smart_selects',
     'rest_framework',
 ]
 
