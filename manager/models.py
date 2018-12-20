@@ -41,11 +41,16 @@ class Project(models.Model):
         return self.name
 
 class Version(models.Model):
-    name = models.CharField('Project Version', max_length=10)
+    name = models.CharField('Version Name', max_length=100, blank=True)
+    version = models.CharField('Project Version', max_length=10)
     project = models.ForeignKey('Project', on_delete=models.PROTECT)
 
     def __str__(self):
         return self.name
+
+    def save(self, *args, **kwargs):
+        self.name = '{0}/{1}'.format(self.version, self.project)
+        super(Version, self).save(*args, **kwargs)
 
 class Instance(models.Model):
     name = models.CharField('Instance Name',max_length=200, unique=True)
