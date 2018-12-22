@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'manager.apps.ManagerConfig',
+    'monitor.apps.MonitorConfig',
 #    'inline_actions',
     'rest_framework',
 ]
@@ -78,12 +79,8 @@ WSGI_APPLICATION = 'webmanager.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'DB_webmanager',
-        'USER': 'manager',
-        'PASSWORD': 'XKGP$#89wHob',
-        'HOST': 'localhost',
-        'PORT': '3306',
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
 
