@@ -73,7 +73,7 @@ class HostModelAdmin(admin.ModelAdmin):
 	readonly_fields = ('os', 'date_add', 'last_alive', 'num_of_inst',
 					   'monitor',)
 	fieldsets = (
-		(None, {'fields': ['name', 'port', 'ip', 'os', 'num_of_inst',]}),
+		(None, {'fields': ['name', ('ip', 'port',), 'os', 'num_of_inst',]}),
 		('Monitoring Information', {'fields': ['date_add', 'last_alive',
 											   'monitor',]}),
 	)
@@ -121,9 +121,10 @@ class ProjectModelAdmin(admin.ModelAdmin):
 	list_display = ('name', 'url',)
 
 class VersionModelAdmin(admin.ModelAdmin):
-	list_per_page = 10
-	list_display = ('name', 'project',)
-	list_filter = ('project__name',)
+        list_per_page = 10
+        list_display = ('name', 'project',)
+        readonly_fields = ('name', )
+        list_filter = ('project__name',)
 
 admin.site.site_header =  'EmOi'
 admin.site.site_title = 'Emoi Admin Site'

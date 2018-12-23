@@ -23,7 +23,7 @@ INSTANCE_TYPES = (
 class Host(models.Model):
     name = models.CharField('Host Name', max_length=200, unique=True)
     ip = models.GenericIPAddressField('IP Address', unique=True)
-    port = models.CharField('Port SSH', max_length=10)
+    port = models.IntegerField('Port SSH', default=22)
     os = models.CharField('Operating System', max_length=200, null=True)
     num_of_inst = models.IntegerField('Number of Instance', default=0)
     monitor = models.CharField('Status', max_length=20, choices=STATUS_CHOICES,
@@ -41,11 +41,16 @@ class Project(models.Model):
         return self.name
 
 class Version(models.Model):
-    name = models.CharField('Project Version', max_length=10)
+    name = models.CharField('Version Name', max_length=100, blank=True)
+    version = models.CharField('Project Version', max_length=10)
     project = models.ForeignKey('Project', on_delete=models.PROTECT)
 
     def __str__(self):
         return self.name
+
+    def save(self, *args, **kwargs):
+        self.name = '{0}/{1}'.format(self.version, self.project)
+        super(Version, self).save(*args, **kwargs)
 
 class Instance(models.Model):
     name = models.CharField('Instance Name',max_length=200, unique=True)
