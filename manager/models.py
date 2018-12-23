@@ -23,7 +23,7 @@ INSTANCE_TYPES = (
 class Host(models.Model):
     name = models.CharField('Host Name', max_length=200, unique=True)
     ip = models.GenericIPAddressField('IP Address', unique=True)
-    port = models.CharField('Port SSH', max_length=10)
+    port = models.IntegerField('Port SSH', default=22)
     os = models.CharField('Operating System', max_length=200, null=True)
     num_of_inst = models.IntegerField('Number of Instance', default=0)
     monitor = models.CharField('Status', max_length=20, choices=STATUS_CHOICES,

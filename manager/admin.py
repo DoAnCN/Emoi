@@ -73,7 +73,7 @@ class HostModelAdmin(admin.ModelAdmin):
 	readonly_fields = ('os', 'date_add', 'last_alive', 'num_of_inst',
 					   'monitor',)
 	fieldsets = (
-		(None, {'fields': ['name', 'port', 'ip', 'os', 'num_of_inst',]}),
+		(None, {'fields': ['name', ('ip', 'port',), 'os', 'num_of_inst',]}),
 		('Monitoring Information', {'fields': ['date_add', 'last_alive',
 											   'monitor',]}),
 	)
