@@ -9,8 +9,27 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 
 import os
 
+# #########
+# # PATHS #
+# #########
+
+# # Full filesystem path to the project.
+# PROJECT_APP_PATH = os.path.dirname(os.path.abspath(__file__)) ##Tìm đường dẫn tuyệt đối đến file setting.py
+# PROJECT_ROOT = BASE_DIR = os.path.dirname(PROJECT_APP_PATH) ##Gán đường dẫn đến project vào 2 biến PROJECT_ROOT và BASE_DIR
+
+# STATIC_URL = '/skin/' ##Gán route url cho các file statics
+
+# STATIC_ROOT = os.path.join(PROJECT_ROOT, STATIC_URL.strip("/")) ##Đường dẫn đến folder các file static sau khi chạy command collectstatic
+
+# MEDIA_URL = "/media/" ##Gán route /media/: Đây là thư mục chứa hình ảnh các file được upload
+
+# MEDIA_ROOT = os.path.join(PROJECT_ROOT, 'static', *MEDIA_URL.strip("/").split("/")) ##Đường dẫn đến folder media
+
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+# PROJECT_ROOT= os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+# STATICFILES_DIRS = (os.path.join(BASE_DIR, "static"),) ##Đường dẫn đến folder static
 
 
 # Quick-start development settings - unsuitable for production
@@ -128,8 +147,11 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATIC_ROOT =   os.path.join(BASE_DIR, 'static')
 STATIC_URL = '/static/'
+STATICFILES_DIRS = (
+    ('static', '/Emoi/monitor/static'),
+)
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES' : (
