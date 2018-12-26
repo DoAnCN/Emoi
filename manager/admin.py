@@ -51,6 +51,10 @@ class InstanceModelAdmin(admin.ModelAdmin):
 							request, 'Permission denied - '
 									 'Please check permission with system admin'
 						)
+					elif 'Remote branch' in output and 'not found' in output:
+						messages.error(
+							request, 'Version not exist'
+						)
 				elif 'has been completed' in output:
 					messages.info(request,
 								  'The deployment process has been completed')
@@ -89,7 +93,7 @@ class HostModelAdmin(admin.ModelAdmin):
 				virtualenv_path = os.path.dirname(os.path.dirname(
 					os.path.dirname(os.path.realpath(__file__))))
 				output = subprocess.run([
-					'{0}/bin/webautotool'.format(virtualenv_path),
+					'{0}/bin/webautotoo'.format(virtualenv_path),
 					'remote', 'register', host_info.name, user],
 					stderr=subprocess.PIPE)
 				output = output.stderr.decode('utf-8')
