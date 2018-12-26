@@ -1,8 +1,7 @@
 # -*- codding: utf-8 -*-
 from __future__ import unicode_literals
 
-import logging
-import subprocess
+import logging, os, subprocess
 
 from django.contrib import admin, messages
 
@@ -32,10 +31,11 @@ class InstanceModelAdmin(admin.ModelAdmin):
 		for selected in selected_list:
 			instance_info = Instance.objects.get(id=selected)
 			try:
-				# user = request.user.get_username()
+				user = request.user.get_username()
+				virtualenv_path = os.path.dirname(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
 				output = subprocess.run([
-					'/home/datlh/.local/share/virtualenvs/webkhoaluan/bin/webautotool',
-					'remote', 'deploy', instance_info.name,],
+					'{0}/bin/webautotool'.format(virtualenv_path),
+					'remote', 'deploy', instance_info.name, user],
 					stderr=subprocess.PIPE)
 				output = output.stderr.decode('utf-8')
 				if 'Error' in output:
@@ -85,9 +85,12 @@ class HostModelAdmin(admin.ModelAdmin):
 		for selected in selected_list:
 			host_info = Host.objects.get(id=selected)
 			try:
+				user = request.user.get_username()
+				virtualenv_path = os.path.dirname(os.path.dirname(
+					os.path.dirname(os.path.realpath(__file__))))
 				output = subprocess.run([
-					'/home/datlh/.local/share/virtualenvs/webkhoaluan/bin/webautotool',
-					'remote', 'register', host_info.name, ],
+					'{0}/bin/webautotool'.format(virtualenv_path),
+					'remote', 'register', host_info.name, user],
 					stderr=subprocess.PIPE)
 				output = output.stderr.decode('utf-8')
 				if 'Error' in output:
