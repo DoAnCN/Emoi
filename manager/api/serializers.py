@@ -11,8 +11,7 @@ class ProjectSerializerGet(serializers.ModelSerializer):
 class VersionSerializerGet(serializers.ModelSerializer):
     class Meta:
         model = Version
-        fields = ['name',]
-        read_only_fields = ['name',]
+        fields = ['version',]
 
 class HostSerializerGet(serializers.ModelSerializer):
     class Meta:
