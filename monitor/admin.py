@@ -23,8 +23,6 @@ class NetworkModelAdmin(admin.ModelAdmin):
     list_per_page = 10
     list_display = ('id_agent','tx_bytes','rx_bytes','n_scan_time')
 
-admin.site.site_header =  'EmOi'
-admin.site.site_title = 'Emoi Admin Site'
 admin.site.register(BasicInfo, BasicInfoModelAdmin)
 admin.site.register(Hardware, HardwareModelAdmin)
 admin.site.register(Network, NetworkModelAdmin)

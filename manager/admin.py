@@ -75,11 +75,10 @@ class HostModelAdmin(admin.ModelAdmin):
 					'monitor',)
 	list_filter = ('os', 'date_add',)
 	readonly_fields = ('os', 'date_add', 'last_alive', 'num_of_inst',
-					   'monitor',)
+					   'monitor', 'id_agent',)
 	fieldsets = (
 		(None, {'fields': ['name', ('ip', 'port',), 'os', 'num_of_inst',]}),
-		('Monitoring Information', {'fields': ['date_add', 'last_alive',
-											   'monitor',]}),
+		('Monitoring Information', {'fields': ['id_agent', 'date_add', 'last_alive', 'monitor',]}),
 	)
 	actions = ('registerAgent',)
 
@@ -97,8 +96,10 @@ class HostModelAdmin(admin.ModelAdmin):
 					'remote', 'register', host_info.name, user],
 					stderr=subprocess.PIPE)
 				output = output.stderr.decode('utf-8')
+				print(output)
 				if 'Error' in output:
 					output = output[output.find('STDERR') + 7:]
+					print(output)
 					logger.error(output.strip())
 					if 'No route to host' in output:
 						messages.error(
@@ -113,7 +114,6 @@ class HostModelAdmin(admin.ModelAdmin):
 				elif 'has been completed' in output:
 					messages.info(request,
 							'The register agent process has been completed')
-
 			except Exception as e:
 				if str(e).startswith('[Errno '):
 					messages.error(
@@ -133,8 +133,8 @@ class VersionModelAdmin(admin.ModelAdmin):
         readonly_fields = ('name', )
         list_filter = ('project__name',)
 
-admin.site.site_header =  'EmOi'
-admin.site.site_title = 'Emoi Admin Site'
+admin.site.site_header =  'Web Manager'
+admin.site.site_title = 'Web Manager Admin Site'
 admin.site.register(Instance, InstanceModelAdmin)
 admin.site.register(Host, HostModelAdmin)
 admin.site.register(Project, ProjectModelAdmin)
