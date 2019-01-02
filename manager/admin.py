@@ -18,7 +18,7 @@ class InstanceModelAdmin(admin.ModelAdmin):
 	list_filter = ('status', 'project__name', 'host__name', 'usr_deployed',
 				   'type',)
 	readonly_fields = ('usr_deployed', 'status', 'latest_deploy', )
-	actions = ('deployInstance',)
+	actions = ('deployInstance', 'createDatabase', 'restoreDatabase')
 	fieldsets = (
 		(None, {'fields': [('name', 'host'), ('db_name', 'type'), 'domain',]}),
 		('Project Information', {'fields': [('project', 'project_ver'),]}),
@@ -38,7 +38,9 @@ class InstanceModelAdmin(admin.ModelAdmin):
 					'remote', 'deploy', instance_info.name, user],
 					stderr=subprocess.PIPE)
 				output = output.stderr.decode('utf-8')
-				if 'Error' in output:
+
+				if 'ERROR' in output:
+					print(output)
 					output = output[output.find('STDERR')+7:]
 					logger.error(output.strip())
 					if 'No route to host' in output:
@@ -66,7 +68,15 @@ class InstanceModelAdmin(admin.ModelAdmin):
 								' Please contact your system administrator')
 				logger.error(e)
 
+	def createDatabase(self, request, queryset):
+		pass
+
+	def restoreDatabase(self, request, queryset):
+		pass
+
 	deployInstance.short_description = 'Deploy selected instances'
+	createDatabase.short_description = 'Create empty database for selected instances'
+	restoreDatabase.short_description = 'Restore exist database for selected instances'
 
 
 class HostModelAdmin(admin.ModelAdmin):
@@ -97,7 +107,7 @@ class HostModelAdmin(admin.ModelAdmin):
 					'remote', 'register', host_info.name, user],
 					stderr=subprocess.PIPE)
 				output = output.stderr.decode('utf-8')
-				if 'Error' in output:
+				if 'ERROR' in output:
 					output = output[output.find('STDERR') + 7:]
 					logger.error(output.strip())
 					if 'No route to host' in output:
