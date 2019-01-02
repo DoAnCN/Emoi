@@ -85,11 +85,10 @@ class HostModelAdmin(admin.ModelAdmin):
 					'monitor',)
 	list_filter = ('os', 'date_add',)
 	readonly_fields = ('os', 'date_add', 'last_alive', 'num_of_inst',
-					   'monitor',)
+					   'monitor', 'id_agent',)
 	fieldsets = (
 		(None, {'fields': ['name', ('ip', 'port',), 'os', 'num_of_inst',]}),
-		('Monitoring Information', {'fields': ['date_add', 'last_alive',
-											   'monitor',]}),
+		('Monitoring Information', {'fields': ['id_agent', 'date_add', 'last_alive', 'monitor',]}),
 	)
 	actions = ('registerAgent',)
 
@@ -103,7 +102,7 @@ class HostModelAdmin(admin.ModelAdmin):
 				virtualenv_path = os.path.dirname(os.path.dirname(
 					os.path.dirname(os.path.realpath(__file__))))
 				output = subprocess.run([
-					'{0}/bin/webautotoo'.format(virtualenv_path),
+					'{0}/bin/webautotool'.format(virtualenv_path),
 					'remote', 'register', host_info.name, user],
 					stderr=subprocess.PIPE)
 				output = output.stderr.decode('utf-8')
@@ -143,8 +142,8 @@ class VersionModelAdmin(admin.ModelAdmin):
         readonly_fields = ('name', )
         list_filter = ('project__name',)
 
-admin.site.site_header =  'EmOi'
-admin.site.site_title = 'Emoi Admin Site'
+admin.site.site_header =  'Web Manager'
+admin.site.site_title = 'Web Manager Admin Site'
 admin.site.register(Instance, InstanceModelAdmin)
 admin.site.register(Host, HostModelAdmin)
 admin.site.register(Project, ProjectModelAdmin)
