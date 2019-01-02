@@ -41,7 +41,7 @@ SECRET_KEY = 'n19f0syn_6vcc=ngfl)*+o%@o31gsr$v@fs4l#47m7+4c67i%c'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
 
 # Application definition
@@ -95,20 +95,20 @@ WSGI_APPLICATION = 'webmanager.wsgi.application'
 DATABASES = {
     # Use Database Sqlite
 
-    # 'default': {
-    #     'ENGINE': 'django.db.backends.sqlite3',
-    #     'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    # }
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    }
 
     # Use Database MySQL
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'DB_webmanager',
-        'USER': 'manager',
-        'PASSWORD': 'XKGP$#89wHob',
-        'HOST': 'localhost',
-        'PORT': '3306',
-    }
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.mysql',
+    #     'NAME': 'DB_webmanager',
+    #     'USER': 'manager',
+    #     'PASSWORD': 'XKGP$#89wHob',
+    #     'HOST': 'localhost',
+    #     'PORT': '3306',
+    # }
 }
 
 

@@ -39,7 +39,7 @@ class InstanceModelAdmin(admin.ModelAdmin):
 					stderr=subprocess.PIPE)
 				output = output.stderr.decode('utf-8')
 
-				if 'ERROR' in output:
+				if 'ERROR' or 'Error' in output:
 					print(output)
 					output = output[output.find('STDERR')+7:]
 					logger.error(output.strip())
@@ -69,10 +69,103 @@ class InstanceModelAdmin(admin.ModelAdmin):
 				logger.error(e)
 
 	def createDatabase(self, request, queryset):
-		pass
+		logger = logging.getLogger(__name__)
+		selected_list = request.POST.getlist(admin.ACTION_CHECKBOX_NAME)
+		for selected in selected_list:
+			instance_info = Instance.objects.get(id=selected)
+			try:
+				user = request.user.get_username()
+				virtualenv_path = os.path.dirname(os.path.dirname(
+					os.path.dirname(os.path.realpath(__file__))))
+				output = subprocess.run([
+					'{0}/bin/webautotool'.format(virtualenv_path),
+					'remote', 'createdb', instance_info.name, user],
+					stderr=subprocess.PIPE)
+				output = output.stderr.decode('utf-8')
+				if 'ERROR' or 'Error' in output:
+					output = output[output.find('STDERR') + 7:]
+					logger.error(output.strip())
+					if 'No route to host' in output:
+						messages.error(
+							request, 'No route to host -'
+									 ' Please check ip address of host '
+									 'or Host does not exist ')
+					elif 'Permission denied' in output:
+						messages.error(
+							request, 'Permission denied - '
+									 'Please check permission with system admin'
+						)
+					elif 'database exists' in output:
+						messages.error(
+							request, 'Database {0} has been exist '.format(instance_info.db_name)
+						)
+					else:
+						messages.info(request,
+									  'The database has been successfully created')
+				elif 'has been completed' in output:
+					messages.info(request,
+								  'The database has been successfully created')
+
+			except Exception as e:
+				if str(e).startswith('[Errno '):
+					messages.error(
+						request, 'Create new database process uncompleted -'
+								 ' Please contact your system administrator')
+				logger.error(e)
 
 	def restoreDatabase(self, request, queryset):
-		pass
+		logger = logging.getLogger(__name__)
+		selected_list = request.POST.getlist(admin.ACTION_CHECKBOX_NAME)
+		for selected in selected_list:
+			instance_info = Instance.objects.get(id=selected)
+			try:
+				user = request.user.get_username()
+				# virtualenv_path = os.path.dirname(os.path.dirname(
+				# 	os.path.dirname(os.path.realpath(__file__))))
+				virtualenv_path = '/home/datlh/.local/share/virtualenvs/webkhoaluan/'
+				output = subprocess.run([
+					'{0}/bin/webautotool'.format(virtualenv_path),
+					'remote', 'importdb', instance_info.name, user],
+					stderr=subprocess.PIPE)
+				output = output.stderr.decode('utf-8')
+				if 'ERROR' or 'Error' in output:
+					print('===============================')
+					output = output[output.find('STDERR') + 7:]
+					logger.error(output.strip())
+					if 'No route to host' in output:
+						messages.error(
+							request, 'No route to host -'
+									 ' Please check ip address of host '
+									 'or Host does not exist ')
+					elif 'Permission denied' in output:
+						messages.error(
+							request, 'Permission denied - '
+									 'Please check permission with system admin'
+						)
+					elif ' Unknown database' in output:
+						messages.error(
+							request, 'Database {0} has not been exist '
+									 '- Please create first'.format(
+								instance_info.db_name)
+						)
+					elif 'already exists' in output:
+						messages.error(
+							request, 'Database already restore before'.format(
+								instance_info.db_name)
+						)
+					else:
+						messages.info(request,
+									  'The database has been successfully imported')
+				elif 'has been completed' in output:
+					messages.info(request,
+								  'The database has been successfully imported')
+
+			except Exception as e:
+				if str(e).startswith('[Errno '):
+					messages.error(
+						request, 'Import database process uncompleted -'
+								 ' Please contact your system administrator')
+				logger.error(e)
 
 	deployInstance.short_description = 'Deploy selected instances'
 	createDatabase.short_description = 'Create empty database for selected instances'
@@ -106,7 +199,7 @@ class HostModelAdmin(admin.ModelAdmin):
 					'remote', 'register', host_info.name, user],
 					stderr=subprocess.PIPE)
 				output = output.stderr.decode('utf-8')
-				if 'ERROR' in output:
+				if 'ERROR' or 'Error' in output:
 					output = output[output.find('STDERR') + 7:]
 					logger.error(output.strip())
 					if 'No route to host' in output:

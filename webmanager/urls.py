@@ -17,14 +17,14 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
-from django.conf.urls import url
-from monitor import urls
+# from django.conf.urls import url
+# from monitor import urls
 
 urlpatterns = [
     path('', admin.site.urls),
     path('api/', include('manager.api.urls', namespace='api_manager')),
     # path('monito/', views.dashboard),
-    path('monitor/', include('monitor.urls', namespace='monitor_manager')),
+    # path('monitor/', include('monitor.urls', namespace='monitor_manager')),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 
