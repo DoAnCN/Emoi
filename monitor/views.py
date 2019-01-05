@@ -1,16 +1,11 @@
 import json
 from django.template.response import TemplateResponse
-from django.http import HttpResponse
 from django.shortcuts import render
 from django.utils.dateparse import parse_datetime
 import requests
 from requests.auth import HTTPBasicAuth
 from manager.models import Host
 from monitor.models import Network
-import schedule
-import time
-import datetime
-from datetime import datetime
 import pytz
 
 # Create your views here.
