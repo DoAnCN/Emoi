@@ -4,11 +4,6 @@ from __future__ import unicode_literals
 from django.db import models
 from django.http import Http404
 
-# STATUS_CHOICES = (
-#     ('a', 'Active'),
-#     ('p', 'Pending'),
-#     ('i', 'Inactive'),
-# )
 STATUS_CHOICES = (
     ('a', 'Active'),
     ('p', 'Pending'),

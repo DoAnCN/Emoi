@@ -129,7 +129,6 @@ class InstanceModelAdmin(admin.ModelAdmin):
 					stderr=subprocess.PIPE)
 				output = output.stderr.decode('utf-8')
 				if 'ERROR' or 'Error' in output:
-					print('===============================')
 					output = output[output.find('STDERR') + 7:]
 					logger.error(output.strip())
 					if 'No route to host' in output:
@@ -235,8 +234,6 @@ class VersionModelAdmin(admin.ModelAdmin):
         readonly_fields = ('name', )
         list_filter = ('project__name',)
 
-admin.site.site_header =  'Web Manager'
-admin.site.site_title = 'Web Manager Admin Site'
 admin.site.register(Instance, InstanceModelAdmin)
 admin.site.register(Host, HostModelAdmin)
 admin.site.register(Project, ProjectModelAdmin)

@@ -24,4 +24,6 @@ urlpatterns = [
     path('monitor/', include('monitor.urls', namespace='monitor_manager')),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
-
+admin.site.site_header =  'WEB MANAGER'
+admin.site.site_title = 'Web Manager Admin Site'
+admin.site.site_url = '/monitor/dashboard'
