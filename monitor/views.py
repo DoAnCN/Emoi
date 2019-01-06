@@ -64,17 +64,18 @@ def network(request,host_name):
             'rx_packets,rx_bytes,rx_dropped,rx_errors'.format(
                 host.id_agent), auth=auth)
         obj=network.json()
-        Network.objects.create(id_agent=host.id_agent,
-                                n_scan_time=parse_datetime(obj['data']['items'][0]['scan_time'].replace('/','-')),
-                                tx_bytes=obj['data']['items'][0]['tx']['bytes'],
-                                tx_packets=obj['data']['items'][0]['tx']['packets'],
-                                tx_errors=obj['data']['items'][0]['tx']['errors'],
-                                tx_dropped=obj['data']['items'][0]['tx']['dropped'],
-                                rx_bytes=obj['data']['items'][0]['rx']['bytes'],
-                                rx_packets=obj['data']['items'][0]['rx']['packets'],
-                                rx_errors=obj['data']['items'][0]['rx']['errors'],
-                                rx_dropped=obj['data']['items'][0]['rx']['dropped'],
-                          )
+        if len(obj['data']['items']) != 0:
+            Network.objects.create(id_agent=host.id_agent,
+                                    n_scan_time=parse_datetime(obj['data']['items'][0]['scan_time'].replace('/','-')),
+                                    tx_bytes=obj['data']['items'][0]['tx']['bytes'],
+                                    tx_packets=obj['data']['items'][0]['tx']['packets'],
+                                    tx_errors=obj['data']['items'][0]['tx']['errors'],
+                                    tx_dropped=obj['data']['items'][0]['tx']['dropped'],
+                                    rx_bytes=obj['data']['items'][0]['rx']['bytes'],
+                                    rx_packets=obj['data']['items'][0]['rx']['packets'],
+                                    rx_errors=obj['data']['items'][0]['rx']['errors'],
+                                    rx_dropped=obj['data']['items'][0]['rx']['dropped'],
+                              )
 
         network_data = Network.objects.filter(id_agent=host.id_agent)
 
