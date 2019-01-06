@@ -1,13 +1,12 @@
-function lineChart(value,value2,value3){
+function lineChart(value,value_packet){
     google.charts.load('current', {'packages':['line']});
-    google.charts.setOnLoadCallback(drawChart);
-    google.charts.setOnLoadCallback(drawChart2);
-    google.charts.setOnLoadCallback(drawChart3);
+    google.charts.setOnLoadCallback(drawChartNetWorkBytes);
+    google.charts.setOnLoadCallback(drawChartNetworkPacktes);
 
-    function drawChart() {
+    function drawChartNetWorkBytes() {
 
       var data = new google.visualization.DataTable();
-      data.addColumn('string', 'Scan Time - WebClient');
+      data.addColumn('string', 'Scan Time');
       data.addColumn('number', 'Tx_Bytes');
       data.addColumn('number', 'Tx_Errors');
       data.addColumn('number', 'Rx_Bytes');
@@ -21,20 +20,20 @@ function lineChart(value,value2,value3){
         'legend':'bottom',
       };
 
-      var chart = new google.charts.Line(document.getElementById('linechart'));
+      var chart = new google.charts.Line(document.getElementById('linechart_bytes'));
 
       chart.draw(data, google.charts.Line.convertOptions(options));
     }
 
-    function drawChart2() {
+    function drawChartNetworkPacktes() {
 
-      var data2 = new google.visualization.DataTable();
-      data2.addColumn('string', 'Scan Time - Agent10');
-      data2.addColumn('number', 'Tx_Bytes');
-      data2.addColumn('number', 'Tx_Errors');
-      data2.addColumn('number', 'Rx_Bytes');
-      data2.addColumn('number', 'Rx_Errors');
-      data2.addRows(value2);
+      var data_packet = new google.visualization.DataTable();
+      data_packet.addColumn('string', 'Scan Time');
+      data_packet.addColumn('number', 'Tx_Packets');
+      data_packet.addColumn('number', 'Tx_Dropped');
+      data_packet.addColumn('number', 'Rx_Packets');
+      data_packet.addColumn('number', 'Rx_Dropped');
+      data_packet.addRows(value_packet);
       
       
 
@@ -43,29 +42,9 @@ function lineChart(value,value2,value3){
         'legend':'bottom',
       };
 
-      var chart = new google.charts.Line(document.getElementById('linechart2'));
+      var chart = new google.charts.Line(document.getElementById('linechart_packets'));
 
-      chart.draw(data2, google.charts.Line.convertOptions(options));
-    }
-
-    function drawChart3() {
-
-      var data3 = new google.visualization.DataTable();
-      data3.addColumn('string', 'Scan Time -Agent100');
-      data3.addColumn('number', 'Tx_Bytes');
-      data3.addColumn('number', 'Tx_Errors');
-      data3.addColumn('number', 'Rx_Bytes');
-      data3.addColumn('number', 'Rx_Errors');
-      data3.addRows(value3);
-      
-      var options = {
-        'height': '500',
-        'legend':'bottom',
-      };
-
-      var chart = new google.charts.Line(document.getElementById('linechart3'));
-
-      chart.draw(data3, google.charts.Line.convertOptions(options));
+      chart.draw(data_packet, google.charts.Line.convertOptions(options));
     }
     
 }

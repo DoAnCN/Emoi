@@ -80,7 +80,7 @@
         <div class="content">
             <div class="container-fluid">
 
-                <div class="row">  {% comment %} linechart {% endcomment %}
+                <div class="row">  {% comment %} line chart bytess {% endcomment %}
                     <div class="col-md-12">
                         <div class="card ">
                             <div class="header">
@@ -88,7 +88,28 @@
                                 <p class="category">Performance Transmit and Revice Bytes</p>
                             </div>
                             <div class="content">
-                                <div id="linechart"></div>
+                                <div id="linechart_bytes"></div>
+
+                                <div class="footer">
+                                    <hr>
+                                    <div class="stats">
+                                        <i class="fa fa-check"></i> Data information in current time
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">  {% comment %} line chart packets {% endcomment %}
+                    <div class="col-md-12">
+                        <div class="card ">
+                            <div class="header">
+                                <h4 class="title">Network Chart</h4>
+                                <p class="category">Performance Transmit and Revice Packets</p>
+                            </div>
+                            <div class="content">
+                                <div id="linechart_packets"></div>
 
                                 <div class="footer">
                                     <hr>
@@ -142,7 +163,7 @@
             };
 
             document.getElementById("agents").innerHTML = listAgents();
-            lineChart(data.network_value, data.network_value_2, data.network_value_3);
+            lineChart(data.network_value, data.network_value_packet);
     	});
 	</script>
 </html>

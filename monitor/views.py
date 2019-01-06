@@ -48,6 +48,7 @@ def network(request,host_name):
     data = {
         'hosts_value': [],
         'network_value': [],
+        'network_value_packet': [],
     }
 
     auth = HTTPBasicAuth('foo', 'bar')
@@ -77,7 +78,7 @@ def network(request,host_name):
                           )
         timezone=pytz.timezone('Asia/Ho_Chi_Minh')
 
-        network_data = Network.objects.get(id_agent=host.id_agent)
+        network_data = Network.objects.filter(id_agent=host.id_agent)
 
         for network in network_data:
             info_network=[
@@ -86,5 +87,12 @@ def network(request,host_name):
                 network.rx_bytes,network.rx_errors,
             ]
             data['network_value'].append(info_network)
+
+            info_network_packet=[
+                network.n_scan_time.astimezone(timezone).strftime('%Y/%m/%d %H:%M:%S'),
+                network.tx_packets,network.tx_dropped,
+                network.rx_packets,network.rx_dropped,
+            ]
+            data['network_value_packet'].append(info_network_packet)
 
     return TemplateResponse(request,'network_agent.html', {'data':json.dumps(data)})
