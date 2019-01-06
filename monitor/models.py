@@ -1,41 +1,28 @@
 from django.db import models
 
 # Create your models here.
-class BasicInfo(models.Model):
-    id_agent=models.IntegerField(primary_key=True)
-    sys_name=models.CharField(max_length=255)
-    version = models.CharField(max_length=255)
-    arch = models.CharField(max_length=255)
-    os_name =models.CharField(max_length=255)
-    os_version =models.CharField(max_length=255)
-   
-
-    def __str__(self):
-        return self.sys_name
-
 class Hardware(models.Model):
-    id_agent = models.IntegerField(primary_key=True)
-    total = models.IntegerField()
-    usage = models.IntegerField()
-    free = models.IntegerField()
-    cpu_name = models.CharField(max_length=255)
-    hw_scan_time = models.DateField()
+    id_agent = models.CharField('ID Agent',max_length=255,null=True)
+    total = models.IntegerField('Total Memory',null=True)
+    usage = models.IntegerField('Usage Memory',null=True)
+    free = models.IntegerField('Free Memory',null=True)
+    cpu_name = models.CharField('CPU Name',max_length=255,null=True)
+    hw_scan_time = models.DateTimeField('Ram Scan Time',null=True)
 
     def __str__(self):
         return self.id_agent
 
 class Network(models.Model):
-    id_agent = models.IntegerField(primary_key=True)
-    n_scan_time = models.DateField()
-    mac = models.CharField(max_length=255)
-    tx_packets= models.IntegerField()
-    tx_bytes= models.IntegerField()
-    tx_errors= models.IntegerField()
-    tx_dropped= models.IntegerField()
-    rx_packets= models.IntegerField()
-    rx_bytes= models.IntegerField()
-    rx_errors= models.IntegerField()
-    rx_dropped= models.IntegerField()
+    id_agent = models.CharField('ID Agent',max_length=255,null=True)
+    n_scan_time = models.DateTimeField('Network Scan Time',null=True)
+    tx_packets= models.IntegerField('Transmit Packets',null=True)
+    tx_bytes= models.IntegerField('Transmit Bytes',null=True)
+    tx_errors= models.IntegerField('Transmit Errors',null=True)
+    tx_dropped= models.IntegerField('Transmit Dropped',null=True)
+    rx_packets= models.IntegerField('Receive Packets',null=True)
+    rx_bytes= models.IntegerField('Receive Bytes',null=True)
+    rx_errors= models.IntegerField('Receive Errors',null=True)
+    rx_dropped= models.IntegerField('Receive Dropped',null=True)
 
     def __str__(self):
         return self.id_agent

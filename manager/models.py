@@ -4,11 +4,6 @@ from __future__ import unicode_literals
 from django.db import models
 from django.http import Http404
 
-# STATUS_CHOICES = (
-#     ('a', 'Active'),
-#     ('p', 'Pending'),
-#     ('i', 'Inactive'),
-# )
 STATUS_CHOICES = (
     ('a', 'Active'),
     ('p', 'Pending'),
@@ -31,7 +26,7 @@ class Host(models.Model):
                                default='n')
     date_add = models.DateTimeField('Date add', null=True)
     last_alive = models.DateTimeField('Last Keep Alive', null=True)
-    id_agent = models.CharField('ID Agent', max_length=5, unique=True)
+    id_agent = models.CharField('ID Agent', max_length=5, unique=True, null=True)
     def __str__(self):
         return self.name
 

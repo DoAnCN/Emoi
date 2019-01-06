@@ -1,0 +1,182 @@
+{% load staticfiles  %}
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-type" content="application/json; charset=UTF-8"/>
+
+	<link rel="shortcut icon" href='{% static "img/favicon.ico" %}'>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+
+	<title>Monitor Web</title>
+
+	<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
+    <meta name="viewport" content="width=device-width" />
+
+
+    <!-- Bootstrap core CSS     -->
+    <link href='{% static "css/bootstrap.min.css" %}' rel="stylesheet" />
+    
+    <!-- Animation library for notifications   -->
+    <link href='{% static "css/animate.min.css" %}' rel="stylesheet"/>
+
+    <!--  Light Bootstrap Table core CSS    -->
+    <link href='{% static "css/light-bootstrap-dashboard.css" %}' rel="stylesheet"/>
+
+    <!--     Fonts and icons     -->
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href='http://fonts.googleapis.com/css?family=Roboto:400,700,300' rel='stylesheet' type='text/css'>
+    <link href='{% static "css/pe-icon-7-stroke.css" %}' rel="stylesheet" />
+    
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+</head>
+<body>
+
+<div class="wrapper">
+    <div class="sidebar" data-color="purple" data-image='{% static "img/sidebar-5.jpg" %}'>
+    	<div class="sidebar-wrapper">
+            <div class="logo">
+                <a href="../../" class="simple-text">
+                    Web Manager
+                </a>
+            </div>
+            <ul class="nav">
+                <li class="active">
+                    <a href="../../monitor/dashboard">
+                        <i class="pe-7s-graph"></i>
+                        <p>Dashboard</p>
+                    </a>
+                </li>
+                <li  data-toggle="collapse" data-target="#agents" class="active">
+                    <a href="#">
+                        <i class="pe-7s-science"></i>
+                        <p> Agents <span class="glyphicon glyphicon-menu-down float-right"></span> </p>
+                    </a>
+                </li>
+                <ul class="collapse" id="agents"></ul>
+            </ul>
+    	</div>
+    </div>
+
+    <div class="main-panel">
+        <nav class="navbar navbar-default navbar-fixed">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navigation-example-2">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="#">Dashboard</a>
+                </div>
+            </div>
+        </nav>
+
+
+        <div class="content">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="header">
+                                <h4 class="title">Summary All Agent </h4>
+                                <p class="category">Here are some basic information about all Agents</p>
+                            </div>
+                            <div class="content table-responsive table-full-width">
+                                <table class="table table-hover table-striped">
+                                    <thead>
+                                        <th>Agent Name</th>
+                                        <th>IP</th>
+                                        <th>Date Add</th>
+                                        <th>Last Alive</th>
+                                        <th>Status</th>
+                                        <th>OS</th>
+                                    </thead>
+                                    <tbody id="content-js">
+                                    </tbody>
+                                </table>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                 <div class="row">
+                    <div class="col-md-12">
+                        <div class="card ">
+                            <div class="header">
+                                <h4 class="title">Memory Chart</h4>
+                                <p class="category">Performance Status of Ram </p>
+                            </div>
+                            <div class="content">
+                                <div id="barchart"></div>
+
+                                <div class="footer">
+                                    <div class="legend">
+                                    <hr>
+                                    <div class="stats">
+                                        <i class="fa fa-check"></i> Data information in current time
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+             </div>
+        </div>
+    </div>
+</div>
+
+
+</body>
+
+    <!--   Core JS Files   -->
+    <script type="text/javascript" src='{% static "js/jquery.3.2.1.min.js" %}' type="text/javascript"></script>
+	<script type="text/javascript" src='{% static "js/bootstrap.min.js" %}' type="text/javascript"></script>
+
+	<!--  Charts Plugin -->
+	<script type="text/javascript" src='{% static "js/chartist.min.js" %}'></script>
+
+    <!--  Notifications Plugin    -->
+    <script type="text/javascript" src='{% static "js/bootstrap-notify.js" %}'></script>
+
+    <!-- Light Bootstrap Table Core javascript and methods for Demo purpose -->
+	<script type="text/javascript" src='{% static "js/light-bootstrap-dashboard.js" %}'></script>
+
+    <script type="text/javascript" src='{% static "js/basic_info.js" %}'></script>
+    <script type="text/javascript" src='{% static "js/piechart.js" %}'></script>
+    <script type="text/javascript" src='{% static "js/linechart.js" %}'></script>
+    <script type="text/javascript" src='{% static "js/barchart.js" %}'></script>
+
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+	<script type="text/javascript">
+    	$(document).ready(function(){
+
+        	$.notify({
+            	icon: 'pe-7s-config pe-spin',
+            	message: "Welcome to <b>Monitor Web</b> - a monitor site for <b> System adminstrator </b>"
+
+            },{
+                type: 'info',
+                timer: 4000
+            });
+            data = JSON.parse('{{data|safe}}');
+            function listAgents() {
+                tag = "";
+                for(i=0; i<data.hosts_value.length; i++){
+                    url_agent = "../network/" + data.hosts_value[i].name
+                    tag += "<li><a href=\""+ url_agent +"\">" + data.hosts_value[i].name + "</a></li>"
+                }
+                return tag;
+            };
+
+            document.getElementById("agents").innerHTML = listAgents();
+            
+            basicinfo(data.hosts_value);
+            barChart(data.memory_value);
+    	});
+	</script>
+</html>
