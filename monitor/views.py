@@ -29,12 +29,13 @@ def dashboard(request):
                                 'hardware?pretty&select=ram_free,scan_time,'
                                 'ram_usage,cpu_name,ram_total'.format(host.id_agent),auth=auth)
         obj_hw=memory.json()
-        info_memory=[
-            host.name,
-            obj_hw['data']['ram']['usage'],
-            obj_hw['data']['ram']['free'],
-        ]
-        data['memory_value'].append(info_memory)
+        if 'ram' in obj_hw['data']:
+            info_memory=[
+                host.name,
+                obj_hw['data']['ram']['usage'],
+                obj_hw['data']['ram']['free'],
+            ]
+            data['memory_value'].append(info_memory)
         info_host={
             'ip':host.ip,
             'name': host.name,
