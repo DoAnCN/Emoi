@@ -1,9 +1,6 @@
 function basicinfo (datahost_json) {
-        console.log(datahost_json);
         var obj = datahost_json
-        // obj = JSON.parse(text);
         var i,stt,content="";
-        
         for (i=0;i<obj.length;i++){
                 if(obj[i].monitor=='n')
                 {

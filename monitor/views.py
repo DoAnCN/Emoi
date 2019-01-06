@@ -10,12 +10,15 @@ from requests.auth import HTTPBasicAuth
 from manager.models import Host
 from monitor.models import Network
 
+timezone=pytz.timezone('Asia/Ho_Chi_Minh')
+
 # Create your views here.
 def dashboard(request):
-    hosts_data = Host.objects.filter(monitor='a').values('ip', 'name', 'os', 'monitor',
-     'date_add', 'last_alive', 'id_agent')
+    # hosts_data = Host.objects.filter(monitor='a').values('ip', 'name', 'os', 'monitor',
+    #  'date_add', 'last_alive', 'id_agent')
+    hosts_data = Host.objects.filter(monitor='a')
     data = {
-        'hosts_value' :list(hosts_data),
+        'hosts_value' :[],
         'memory_value' :[],
     }
     
@@ -24,15 +27,23 @@ def dashboard(request):
     for host in hosts_data:
         memory = requests.get('http://127.0.0.1:55000/syscollector/{0}/'
                                 'hardware?pretty&select=ram_free,scan_time,'
-                                'ram_usage,cpu_name,ram_total'.format(host["id_agent"]),auth=auth)
+                                'ram_usage,cpu_name,ram_total'.format(host.id_agent),auth=auth)
         obj_hw=memory.json()
         info_memory=[
-            host['name'],
+            host.name,
             obj_hw['data']['ram']['usage'],
             obj_hw['data']['ram']['free'],
         ]
         data['memory_value'].append(info_memory)
-
+        info_host={
+            'ip':host.ip,
+            'name': host.name,
+            'os': host.os,
+            'monitor':host.monitor,
+            'date_add': host.date_add.astimezone(timezone).strftime('%Y/%m/%d %H:%M:%S'),
+            'last_alive': host.last_alive.astimezone(timezone).strftime('%Y/%m/%d %H:%M:%S'),
+        }
+        data['hosts_value'].append(info_host)
     return render(request,'index.html',{'data':json.dumps(data)})
 
 def network(request,host_name):
@@ -63,7 +74,6 @@ def network(request,host_name):
                                 rx_errors=obj['data']['items'][0]['rx']['errors'],
                                 rx_dropped=obj['data']['items'][0]['rx']['dropped'],
                           )
-        timezone=pytz.timezone('Asia/Ho_Chi_Minh')
 
         network_data = Network.objects.filter(id_agent=host.id_agent)
 
