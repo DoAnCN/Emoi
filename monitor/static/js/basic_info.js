@@ -1,36 +1,34 @@
 function basicinfo (datahost_json) {
+        console.log(datahost_json);
         var obj = datahost_json
         // obj = JSON.parse(text);
-        var name = SourceBufferList
-        'localhost/monitor/'+id
-        var i,id ="";
-        var content="";
+        var i,stt,content="";
+        
         for (i=0;i<obj.length;i++){
-                if(obj[i].status=='n')
+                if(obj[i].monitor=='n')
                 {
-                        obj[i].status='Never Connected';
+                        stt='Never Connected';
                 }
-                if(obj[i].status=='a')
+                if(obj[i].monitor=='a')
                 {
-                        obj[i].status='Active';
+                        stt='Active';
                 }
-                if(obj[i].status=='p')
+                if(obj[i].monitor=='p')
                 {
-                        obj[i].status='Pending';
+                        stt='Pending';
                 }
-                if(obj[i].status=='d')
+                if(obj[i].monitor=='d')
                 {
-                        obj[i].status='Disconnected';
+                        stt='Disconnected';
                 }
                 content+=   '<tr>' + 
                         '<td>' + obj[i].name + '</td>' +
                         '<td>' + obj[i].ip + '</td>' + 
                         '<td>' + obj[i].date_add + '</td>' +
                         '<td>' + obj[i].last_alive  + '</td>' +
-                        '<td>' + obj[i].status + '</td>' + 
+                        '<td>' + stt + '</td>' + 
                         '<td>' + obj[i].os + '</td>' + 
                         '</tr>' ;            
         }
-
         document.getElementById("content-js").innerHTML = content;
   }
