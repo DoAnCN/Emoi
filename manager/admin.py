@@ -120,9 +120,9 @@ class InstanceModelAdmin(admin.ModelAdmin):
 			instance_info = Instance.objects.get(id=selected)
 			try:
 				user = request.user.get_username()
-				# virtualenv_path = os.path.dirname(os.path.dirname(
-				# 	os.path.dirname(os.path.realpath(__file__))))
-				virtualenv_path = '/home/datlh/.local/share/virtualenvs/webkhoaluan/'
+				virtualenv_path = os.path.dirname(os.path.dirname(
+				 	os.path.dirname(os.path.realpath(__file__))))
+				#virtualenv_path = '/home/datlh/.local/share/virtualenvs/webkhoaluan/'
 				output = subprocess.run([
 					'{0}/bin/webautotool'.format(virtualenv_path),
 					'remote', 'importdb', instance_info.name, user],
