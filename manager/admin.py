@@ -57,7 +57,7 @@ class InstanceModelAdmin(admin.ModelAdmin):
 						messages.error(
 							request, 'Version not exist'
 						)
-				elif 'has been completed' in output:
+				if 'has been completed' in output:
 					messages.info(request,
 								  'The deployment process has been completed')
 
@@ -99,10 +99,8 @@ class InstanceModelAdmin(admin.ModelAdmin):
 						messages.error(
 							request, 'Database {0} has been exist '.format(instance_info.db_name)
 						)
-					else:
-						messages.info(request,
-									  'The database has been successfully created')
-				elif 'has been completed' in output:
+					
+				if 'has been completed' in output:
 					messages.info(request,
 								  'The database has been successfully created')
 
@@ -152,10 +150,7 @@ class InstanceModelAdmin(admin.ModelAdmin):
 							request, 'Database already restore before'.format(
 								instance_info.db_name)
 						)
-					else:
-						messages.info(request,
-									  'The database has been successfully imported')
-				elif 'has been completed' in output:
+				if 'has been completed' in output:
 					messages.info(request,
 								  'The database has been successfully imported')
 
