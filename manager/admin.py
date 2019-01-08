@@ -99,7 +99,6 @@ class InstanceModelAdmin(admin.ModelAdmin):
 						messages.error(
 							request, 'Database {0} has been exist '.format(instance_info.db_name)
 						)
-					
 				if 'has been completed' in output:
 					messages.info(request,
 								  'The database has been successfully created')
@@ -206,7 +205,7 @@ class HostModelAdmin(admin.ModelAdmin):
 							request, 'Permission denied - '
 									 'Please check permission with system admin'
 						)
-				elif 'has been completed' in output:
+				if 'has been completed' in output:
 					messages.info(request,
 							'The register agent process has been completed')
 

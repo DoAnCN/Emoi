@@ -22,7 +22,7 @@ def dashboard(request):
         'memory_value' :[],
     }
     
-    auth = HTTPBasicAuth('foo', 'bar')
+    auth = HTTPBasicAuth('titi', 'tutu')
 
     for host in hosts_data:
         memory = requests.get('http://127.0.0.1:55000/syscollector/{0}/'
@@ -54,7 +54,7 @@ def network(request,host_name):
         'network_value_packet': [],
     }
     
-    auth = HTTPBasicAuth('foo', 'bar')
+    auth = HTTPBasicAuth('titi', 'tutu')
 
     host = Host.objects.get(name=host_name, monitor='a')
     if host:
