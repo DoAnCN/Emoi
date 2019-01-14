@@ -5,24 +5,27 @@ import pytz
 from django.template.response import TemplateResponse
 from django.shortcuts import render
 from django.utils.dateparse import parse_datetime
+from django.conf import settings
+from django.shortcuts import redirect
 
 from requests.auth import HTTPBasicAuth
 from manager.models import Host
 from monitor.models import Network
 
 timezone=pytz.timezone('Asia/Ho_Chi_Minh')
+auth = HTTPBasicAuth('titi', 'tutu')
 
 # Create your views here.
 def dashboard(request):
     # hosts_data = Host.objects.filter(monitor='a').values('ip', 'name', 'os', 'monitor',
     #  'date_add', 'last_alive', 'id_agent')
+    if not request.user.is_authenticated:
+        return redirect('{}?next={}'.format(settings.LOGIN_URL, request.path))
     hosts_data = Host.objects.filter(monitor='a')
     data = {
         'hosts_value' :[],
         'memory_value' :[],
     }
-    
-    auth = HTTPBasicAuth('titi', 'tutu')
 
     for host in hosts_data:
         memory = requests.get('http://127.0.0.1:55000/syscollector/{0}/'
@@ -48,13 +51,13 @@ def dashboard(request):
     return render(request,'index.html',{'data':json.dumps(data)})
 
 def network(request,host_name):
+    if not request.user.is_authenticated:
+        return redirect('{}?next={}'.format(settings.LOGIN_URL, request.path))
     data = {
         'hosts_value': list(Host.objects.filter(monitor='a').values('name')),
         'network_value': [],
         'network_value_packet': [],
     }
-    
-    auth = HTTPBasicAuth('titi', 'tutu')
 
     host = Host.objects.get(name=host_name, monitor='a')
     if host:
@@ -64,18 +67,17 @@ def network(request,host_name):
             'rx_packets,rx_bytes,rx_dropped,rx_errors'.format(
                 host.id_agent), auth=auth)
         obj=network.json()
-        if len(obj['data']['items']) != 0:
-            Network.objects.create(id_agent=host.id_agent,
-                                    n_scan_time=parse_datetime(obj['data']['items'][0]['scan_time'].replace('/','-')),
-                                    tx_bytes=obj['data']['items'][0]['tx']['bytes'],
-                                    tx_packets=obj['data']['items'][0]['tx']['packets'],
-                                    tx_errors=obj['data']['items'][0]['tx']['errors'],
-                                    tx_dropped=obj['data']['items'][0]['tx']['dropped'],
-                                    rx_bytes=obj['data']['items'][0]['rx']['bytes'],
-                                    rx_packets=obj['data']['items'][0]['rx']['packets'],
-                                    rx_errors=obj['data']['items'][0]['rx']['errors'],
-                                    rx_dropped=obj['data']['items'][0]['rx']['dropped'],
-                              )
+        Network.objects.create(id_agent=host.id_agent,
+                                n_scan_time=parse_datetime(obj['data']['items'][0]['scan_time'].replace('/','-')),
+                                tx_bytes=obj['data']['items'][0]['tx']['bytes'],
+                                tx_packets=obj['data']['items'][0]['tx']['packets'],
+                                tx_errors=obj['data']['items'][0]['tx']['errors'],
+                                tx_dropped=obj['data']['items'][0]['tx']['dropped'],
+                                rx_bytes=obj['data']['items'][0]['rx']['bytes'],
+                                rx_packets=obj['data']['items'][0]['rx']['packets'],
+                                rx_errors=obj['data']['items'][0]['rx']['errors'],
+                                rx_dropped=obj['data']['items'][0]['rx']['dropped'],
+                          )
 
         network_data = Network.objects.filter(id_agent=host.id_agent)
 

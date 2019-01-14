@@ -95,20 +95,20 @@ WSGI_APPLICATION = 'webmanager.wsgi.application'
 DATABASES = {
     # Use Database Sqlite
 
-    #'default': {
-    #    'ENGINE': 'django.db.backends.sqlite3',
-    #    'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    #}
+    'default': {
+       'ENGINE': 'django.db.backends.sqlite3',
+       'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    }
 
     # Use Database MySQL
-     'default': {
-         'ENGINE': 'django.db.backends.mysql',
-         'NAME': 'DB_webmanager',
-         'USER': 'manager',
-         'PASSWORD': 'XKGP$#89wHob',
-         'HOST': 'localhost',
-         'PORT': '3306',
-     }
+    #  'default': {
+    #      'ENGINE': 'django.db.backends.mysql',
+    #      'NAME': 'DB_webmanager',
+    #      'USER': 'manager',
+    #      'PASSWORD': 'XKGP$#89wHob',
+    #      'HOST': 'localhost',
+    #      'PORT': '3306',
+    #  }
 }
 
 
@@ -144,6 +144,7 @@ USE_L10N = True
 
 USE_TZ = True
 
+LOGIN_URL='/login/'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
